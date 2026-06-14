@@ -16,8 +16,6 @@ class _QuizScreenState extends State<QuizScreen> {
 
   bool get _isLastQuestion => _currentIndex == quizQuestions.length - 1;
 
-  double get _progress => (_currentIndex + 1) / quizQuestions.length;
-
   void _selectOption(int optionIndex) {
     setState(() {
       _selectedAnswers[_currentIndex] = optionIndex;
@@ -30,8 +28,9 @@ class _QuizScreenState extends State<QuizScreen> {
         SnackBar(
           content: const Text('Please select an answer.'),
           behavior: SnackBarBehavior.floating,
+          backgroundColor: const Color(0xFF7E57C2),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(12),
           ),
           margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         ),
@@ -48,100 +47,120 @@ class _QuizScreenState extends State<QuizScreen> {
         ),
       );
     } else {
-      setState(() {
-        _currentIndex++;
-      });
+      setState(() => _currentIndex++);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     final question = quizQuestions[_currentIndex];
     final labels = ['A', 'B', 'C', 'D'];
+    final questionNumber =
+    (_currentIndex + 1).toString().padLeft(2, '0');
 
     return Scaffold(
-      backgroundColor: colorScheme.surface,
-      appBar: AppBar(
-        backgroundColor: colorScheme.surface,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.close_rounded),
-          onPressed: () => Navigator.of(context).pop(),
-          tooltip: 'Exit Quiz',
-        ),
-        title: Text(
-          'Amar Proshno',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            color: colorScheme.primary,
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFE1D5F5),
+              Color(0xFFCFBEF0),
+              Color(0xFFBFA8E8),
+            ],
           ),
         ),
-        centerTitle: true,
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: SafeArea(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Question ${_currentIndex + 1} of ${quizQuestions.length}',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                      color: colorScheme.onSurface.withValues(alpha: 0.6),
+              const SizedBox(height: 16),
+
+              // Close button row
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).pop(),
+                      child: Container(
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF9575CD).withValues(alpha: 0.2),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.close_rounded,
+                          color: Color(0xFF5E35B1),
+                          size: 20,
+                        ),
+                      ),
                     ),
-                  ),
-                  Text(
-                    '${((_currentIndex + 1) / quizQuestions.length * 100).toInt()}%',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: colorScheme.primary,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: LinearProgressIndicator(
-                  value: _progress,
-                  minHeight: 8,
-                  backgroundColor: colorScheme.surfaceContainerHighest,
-                  valueColor:
-                  AlwaysStoppedAnimation<Color>(colorScheme.primary),
+                  ],
                 ),
               ),
-              const SizedBox(height: 28),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: colorScheme.primaryContainer.withValues(alpha: 0.4),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: colorScheme.primary.withValues(alpha: 0.15),
-                  ),
-                ),
-                child: Text(
-                  question.question,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: colorScheme.onSurface,
-                    height: 1.4,
-                  ),
-                ),
-              ),
+
               const SizedBox(height: 24),
+
+              // Question number badge (small circle above blob)
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF9575CD).withValues(alpha: 0.35),
+                  shape: BoxShape.circle,
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  questionNumber,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF4A148C),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              // Blob question card
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 28),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 28, vertical: 28),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF9575CD).withValues(alpha: 0.30),
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(60),
+                      topRight: const Radius.circular(40),
+                      bottomLeft: const Radius.circular(40),
+                      bottomRight: const Radius.circular(60),
+                    ),
+                  ),
+                  child: Text(
+                    question.question,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF4A148C),
+                      height: 1.45,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 32),
+
+              // Options list
               Expanded(
                 child: ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 28),
                   itemCount: question.options.length,
                   itemBuilder: (context, index) {
                     return OptionTile(
@@ -153,39 +172,36 @@ class _QuizScreenState extends State<QuizScreen> {
                   },
                 ),
               ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                height: 54,
-                child: FilledButton(
-                  onPressed: _handleNextOrSubmit,
-                  style: FilledButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+
+              // Next / Submit button
+              Padding(
+                padding: const EdgeInsets.fromLTRB(28, 8, 28, 28),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: ElevatedButton(
+                    onPressed: _handleNextOrSubmit,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF7E57C2),
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      shadowColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
                     ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        _isLastQuestion ? 'Submit' : 'Next',
-                        style: const TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w600,
-                        ),
+                    child: Text(
+                      _isLastQuestion ? 'SUBMIT' : 'NEXT',
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 2.5,
+                        color: Colors.white,
                       ),
-                      const SizedBox(width: 8),
-                      Icon(
-                        _isLastQuestion
-                            ? Icons.check_circle_outline_rounded
-                            : Icons.arrow_forward_rounded,
-                        size: 20,
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
             ],
           ),
         ),
