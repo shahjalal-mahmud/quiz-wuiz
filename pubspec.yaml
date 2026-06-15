@@ -4,7 +4,6 @@ description: A simple Flutter Quiz Application - Amar Proshno
 publish_to: 'none'
 
 version: 1.0.0+1
-get: ^4.6.6
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -12,6 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  get: 4.6.6
 
 flutter:
   uses-material-design: true
