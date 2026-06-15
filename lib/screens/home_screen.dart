@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'quiz_screen.dart';
+import 'package:get/get.dart';
+import '../controllers/quiz_controller.dart';
+import '../routes/app_routes.dart';
 
-// Shared gradient — used by all screens
 const appGradient = LinearGradient(
   begin: Alignment.topCenter,
   end: Alignment.bottomCenter,
   colors: [
-    Color(0xFFD9BEDC), // soft lilac top
-    Color(0xFFB086BC), // mid mauve
-    Color(0xFF834FA0), // deep violet bottom
+    Color(0xFFD9BEDC),
+    Color(0xFFB086BC),
+    Color(0xFF834FA0),
   ],
   stops: [0.0, 0.41, 0.82],
 );
 
-// Box / card decoration
 BoxDecoration cardDecoration({double radius = 32}) => BoxDecoration(
   gradient: const LinearGradient(
     begin: Alignment.topLeft,
@@ -55,7 +55,6 @@ class HomeScreen extends StatelessWidget {
             children: [
               const Spacer(flex: 2),
 
-              // Illustration card
               Container(
                 width: 200,
                 height: 200,
@@ -63,7 +62,6 @@ class HomeScreen extends StatelessWidget {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    // Soft inner glow ring
                     Container(
                       width: 160,
                       height: 160,
@@ -92,8 +90,8 @@ class HomeScreen extends StatelessWidget {
                         const SizedBox(height: 6),
                         Icon(Icons.psychology_rounded,
                             size: 60,
-                            color:
-                            const Color(0xFFFFFFFF).withValues(alpha: 0.9)),
+                            color: const Color(0xFFFFFFFF)
+                                .withValues(alpha: 0.9)),
                         const SizedBox(height: 6),
                         Row(
                           mainAxisSize: MainAxisSize.min,
@@ -117,7 +115,6 @@ class HomeScreen extends StatelessWidget {
 
               const SizedBox(height: 32),
 
-              // Title
               const Text(
                 'QUIZ',
                 style: TextStyle(
@@ -149,7 +146,6 @@ class HomeScreen extends StatelessWidget {
 
               const Spacer(flex: 2),
 
-              // START button
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 48),
                 child: SizedBox(
@@ -157,15 +153,9 @@ class HomeScreen extends StatelessWidget {
                   height: 54,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).push(
-                        PageRouteBuilder(
-                          pageBuilder: (_, anim, __) => const QuizScreen(),
-                          transitionsBuilder: (_, anim, __, child) =>
-                              FadeTransition(opacity: anim, child: child),
-                          transitionDuration:
-                          const Duration(milliseconds: 350),
-                        ),
-                      );
+                      // Put a fresh controller for each quiz session
+                      Get.put(QuizController());
+                      Get.toNamed(AppRoutes.quiz);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
@@ -191,7 +181,6 @@ class HomeScreen extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              // Subtle dots indicator
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
